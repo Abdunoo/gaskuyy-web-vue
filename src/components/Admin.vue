@@ -92,6 +92,7 @@ import EditProduct from "./EditProduct.vue";
 import {
    useToast
 } from 'vue-toast-notification';
+import { apiUrl } from "./api";
 export default {
    name: "Admin",
    components: {
@@ -112,8 +113,9 @@ export default {
          this.showMenuId = this.showMenuId == productId ? null : productId;
       },
       getProduct() {
+         let url = `${apiUrl}products?page=1&limit=100`;
          axios
-            .get("http://localhost:8080/api/products?page=1&limit=20&search=")
+            .get(url)
             .then((response) => (this.lstProducts = response.data))
             .catch((error) => console.log(error));
       },
@@ -125,17 +127,13 @@ export default {
          console.log('exit from edit page')
       },
       getByCat(cat) {
-         if (cat != null) {
-            axios
-               .get("http://localhost:8080/api/products/cat/" + cat + "?search=")
+         let url = `${apiUrl}products?page=1&limit=100`;
+         if (cat != "all") {
+            url += `&category=${cat}`;
+         }  axios
+               .get(url)
                .then((response) => (this.lstProducts = response.data))
                .catch((error) => console.log(error));
-         } else {
-            axios
-               .get("http://localhost:8080/api/products?page=1&limit=20&search=")
-               .then((response) => (this.lstProducts = response.data))
-               .catch((error) => console.log(error));
-         }
       },
       remove(productId) {
          let toast = useToast();
@@ -144,7 +142,7 @@ export default {
             duration: 5000
          })
          axios
-            .delete("http://localhost:8080/api/products/" + productId)
+            .delete(`${apiUrl}products/${productId}`)
             .then((response) => console.log('delete product success'))
             .catch((error) => console.log(error));
          setTimeout(() => {

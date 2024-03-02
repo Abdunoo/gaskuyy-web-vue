@@ -54,6 +54,7 @@ import {
 } from "vue";
 import Card from "./Card.vue";
 import axios from "axios";
+import { apiUrl } from "./api";
 
 export default {
    name: "Category",
@@ -77,17 +78,14 @@ export default {
    },
    methods: {
       getProduct(cat, search) {
-         if (cat == "all") {
-            axios
-               .get("http://localhost:8080/api/products?page=1&limit=20&search=" + search)
-               .then((response) => (this.lstProducts = response.data))
-               .catch((error) => console.log(error));
-         } else {
-            axios
-               .get("http://localhost:8080/api/products/cat/" + cat + "?search=" + search)
-               .then((response) => (this.lstProducts = response.data))
-               .catch((error) => console.log(error));
+         let url = `${apiUrl}products?page=1&limit=100&search=${search}`;
+         if (cat != "all") {
+            url += `&category=${cat}`;
          }
+            axios
+               .get(url)
+               .then((response) => (this.lstProducts = response.data))
+               .catch((error) => console.log(error));
       },
       performSearch(newSearchValue) {
          if (newSearchValue != null || newSearchValue != undefined) {

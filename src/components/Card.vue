@@ -18,6 +18,7 @@ import debounce from "lodash.debounce";
 import {
    useToast
 } from 'vue-toast-notification';
+import { apiUrl } from "./api";
 
 export default {
    name: "Card",
@@ -44,10 +45,10 @@ export default {
             duration: 5000
          })
          const params = {
-            productId: this.product,
+            productId: this.product.id,
             qty: 1
          };
-         axios.put('http://localhost:8080/api/cart', params)
+         axios.post(`${apiUrl}cart`, params)
             .then(() => {
                console.log('Cart updated successfully!');
 

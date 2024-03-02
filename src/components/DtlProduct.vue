@@ -80,6 +80,7 @@ import axios from "axios";
 import {
    useToast
 } from 'vue-toast-notification';
+import { apiUrl } from "./api";
 
 export default {
    name: "DetailProduct",
@@ -92,7 +93,7 @@ export default {
    methods: {
       getDetailProduct(id) {
          axios
-            .get("http://localhost:8080/api/products/" + id)
+            .get(`${apiUrl}products/${id}`)
             .then((response) => (this.product = response.data))
             .catch((error) => console.log(error));
          console.log('get detail')
@@ -104,10 +105,10 @@ export default {
             duration: 5000
          })
          const params = {
-            productId: this.product,
+            productId: this.product.id,
             qty: this.qty
          };
-         axios.put('http://localhost:8080/api/cart', params)
+         axios.post(`${apiUrl}cart`, params)
             .then(response => {
                console.log('Cart updated successfully!');
             })

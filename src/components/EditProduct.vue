@@ -46,6 +46,7 @@ import axios from "axios";
 import {
    useToast
 } from 'vue-toast-notification';
+import { apiUrl } from "./api";
 export default {
    nema: "EditProduct",
    props: {
@@ -63,13 +64,13 @@ export default {
    methods: {
       getProductById(id) {
          axios
-            .get("http://localhost:8080/api/products/" + id)
+            .get(`${apiUrl}products/${id}`)
             .then((response) => (this.product = response.data))
             .catch((error) => console.log(error));
          console.log('get data product')
       },
       updateProduct(selected) {
-         axios.put('http://localhost:8080/api/products', selected)
+         axios.post(`${apiUrl}products`, selected)
             .then(response => {
                console.log('product updated successfully!');
             })

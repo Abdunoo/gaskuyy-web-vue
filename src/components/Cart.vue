@@ -36,10 +36,10 @@
                         <img src="./assets/item1.png" class="w-1/3 py-2 bg-gray-300 rounded-xl h-1/3" alt="" />
                         <div class="flex flex-col justify-center">
                            <p class="text-base font-medium text-gray-500">
-                              {{ cart.productId.title }}
+                              {{ cart.product.title }}
                            </p>
                            <p class="font-sans text-sm font-medium text-gray-600">
-                              Rp {{ cart.productId.price }}
+                              Rp {{ cart.product.price }}
                            </p>
                         </div>
                      </div>
@@ -105,6 +105,7 @@ import axios from "axios";
 import {
    useToast
 } from 'vue-toast-notification';
+import { apiUrl } from "./api";
 export default {
    name: "Cart",
    data() {
@@ -116,7 +117,7 @@ export default {
    methods: {
       getCartData() {
          axios
-            .get("http://localhost:8080/api/cart")
+            .get(`${apiUrl}cart`)
             .then((response) => {
                this.lstCart = response.data;
                console.log('Cart data retrieved successfully:', this.lstCart);
@@ -134,7 +135,7 @@ export default {
          this.updateCartData(this.selected)
       },
       updateCartData(selected) {
-         axios.put('http://localhost:8080/api/cart', selected)
+         axios.post(`${apiUrl}cart`, selected)
             .then(response => {
                console.log('Cart updated successfully!');
             })
@@ -151,7 +152,7 @@ export default {
             position: 'top-right',
             duration: 5000
          })
-         axios.delete('http://localhost:8080/api/cart/' + id)
+         axios.delete(`${apiUrl}cart/${id}`)
             .then(response => {
                console.log('Cart delete successfully!');
             })
