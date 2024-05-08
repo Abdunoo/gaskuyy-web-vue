@@ -18,7 +18,6 @@ import debounce from "lodash.debounce";
 import {
    useToast
 } from 'vue-toast-notification';
-import { apiUrl } from "./api";
 
 export default {
    name: "Card",

@@ -5,7 +5,7 @@
       <span class="text-xs font-medium text-blue-400">See all</span>
    </div>
    <div class="grid w-full grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-      <Card v-for="(product, index) in lstProducts.slice(0, 2)" :key="index" :product="product"></Card>
+      <Card v-for="(product, index) in lstProducts" :key="index" :product="product"></Card>
    </div>
 </div>
 
@@ -54,7 +54,6 @@ import {
 } from "vue";
 import Card from "./Card.vue";
 import axios from "axios";
-import { apiUrl } from "./api";
 
 export default {
    name: "Category",
@@ -77,24 +76,34 @@ export default {
       };
    },
    methods: {
-      getProduct(cat, search) {
-         let url = `${apiUrl}products?page=1&limit=100&search=${search}`;
-         if (cat != "all") {
-            url += `&category=${cat}`;
-         }
-            axios
-               .get(url)
-               .then((response) => (this.lstProducts = response.data))
-               .catch((error) => console.log(error));
-      },
+      
       performSearch(newSearchValue) {
          if (newSearchValue != null || newSearchValue != undefined) {
             this.getProduct(this.category, newSearchValue)
          } 
       }
    },
+
+   async getProduct(cat, search) {
+         let url = `${apiUrl}product?page=1&limit=100&search=${search}`;
+         if (cat != "all") {
+            url += `&category=${cat}`;
+         }
+            // axios
+            //    .get(url)
+            //    .then((response) => (
+            //       this.lstProducts = response.data
+                  
+            //    ))
+            //    .catch((error) => console.log(error));
+            //    console.log('lst produk = '+ lstProducts)
+
+            const response = axios.get(url);
+            this.lstProducts
+
+      },
+
    mounted() {
-      this.lstProducts = [];
       this.category = this.$route.params.cat;
       console.log("mounted " + this.category);
       this.performSearch("")

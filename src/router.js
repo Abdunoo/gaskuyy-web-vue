@@ -1,18 +1,19 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import Dashboard from './components/Dashboard.vue';
-import DetailProduct from './components/DtlProduct.vue';
+import Dashboard from './views/Dashboard.vue';
+import DetailProduct from './views/DtlProduct.vue';
 import Category from './components/Category.vue';
-import Cart from './components/Cart.vue';
-import Admin from './components/Admin.vue';
-import Login from './components/Login.vue';
+import Cart from './views/Cart.vue';
+import Admin from './views/Admin.vue';
+import Login from './views/Login.vue';
 
 const routes = [
-  { path: '/', redirect: '/dashboard/all' },
-  { path: '/dashboard', component: Dashboard, children: 
-  	[
-		{path:':cat', component:Category},
-	] 
-  },
+  { path: '/', redirect: '/dashboard' },
+//   { path: '/dashboard', component: Dashboard, children: 
+//   	[
+// 		{path:':cat', component:Category},
+// 	] 
+//   },
+  { path: '/dashboard', component: Dashboard },
   { path: '/product/:id', component: DetailProduct },
   {path:'/cart', component: Cart},
   {path:'/admin', component: Admin, meta: { requiresAuth: true }},

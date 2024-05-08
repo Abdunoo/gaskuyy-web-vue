@@ -8,8 +8,9 @@
       </span>
       <div>
          <div class="mb-4">
-            <label class="block mb-2 text-sm font-medium text-gray-600">Image Url:</label>
-            <img src="./assets/item1.png" class="rounded-full h-14 w-14" alt="">
+            <label class="block mb-2 text-sm font-medium text-gray-600">Image:</label>
+            <img :src="product.image_url" alt="" class="w-14 h-14">
+            <input v-on:change="handleImageUpload" class="block w-full text-sm text-gray-900 border border-gray-300 cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="file_input" type="file">
          </div>
          <div class="mb-4">
             <label class="block mb-2 text-sm font-medium text-gray-600">Name:</label>
@@ -29,9 +30,13 @@
          </div>
          <div class="mb-4">
             <label class="block mb-2 text-sm font-medium text-gray-600">Category:</label>
-            <input v-model="product.category" type="text" class="w-full p-2 border border-gray-300 rounded" placeholder="Category">
+            <select id="countries" v-model="product.category" :value="product.category" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                  <option value="Tennis">Tennis</option>
+                  <option value="Running">Running</option>
+                  <option value="Outdoor">Outdoor</option>
+               </select>
          </div>
-         <button @click="updateProduct(this.product) " class="flex items-center justify-center p-2 mt-6 text-white bg-blue-600 rounded hover:bg-blue-700">
+         <button @click="saveProduk() " class="flex items-center justify-center p-2 mt-6 text-white bg-blue-600 rounded hover:bg-blue-700">
             <span>Save</span>
          </button>
          <div style="height: 250px; width: max-content;"></div>
@@ -46,7 +51,8 @@ import axios from "axios";
 import {
    useToast
 } from 'vue-toast-notification';
-import { apiUrl } from "./api";
+import { makeRequest } from '@/helpers/api';
+
 export default {
    nema: "EditProduct",
    props: {
@@ -62,21 +68,26 @@ export default {
       }
    },
    methods: {
-      getProductById(id) {
-         axios
-            .get(`${apiUrl}products/${id}`)
-            .then((response) => (this.product = response.data))
-            .catch((error) => console.log(error));
-         console.log('get data product')
+      async getProductById(id) {
+         let response = await makeRequest({
+            url: `product/${id}`,
+            method: 'GET'
+         })
+         this.product = response.data;
       },
-      updateProduct(selected) {
-         axios.post(`${apiUrl}products`, selected)
-            .then(response => {
-               console.log('product updated successfully!');
-            })
-            .catch(error => {
-               console.error('Error updating cart:', error);
-            });
+      async saveProduk() {
+         let url = 'product';
+         if (this.product.id) {
+            url += `/${this.product.id}`
+         }
+         let response = await makeRequest({
+            url: `${url}`,
+            data: this.product,
+            method: 'POST',
+            headers: {
+               'Content-Type': 'multipart/form-data' 
+            }
+         })
          setTimeout(() => {
             this.$emit('closeEdit')
          }, 500);
@@ -85,6 +96,24 @@ export default {
             position: 'top-right',
             duration: 5000
          })
+      },
+      handleImageUpload(event) {
+         const selectedFile = event.target.files[0];
+
+         // Validation (optional)
+         if (!selectedFile || !selectedFile.type.match('image/*')) {
+            alert('Please select a valid image file.');
+            return;
+         }
+
+         this.product.image_url = selectedFile;
+
+         // // File processing or upload logic
+         // const reader = new FileReader();
+         // reader.onload = (e) => {
+         //    this.product.image_url = e.target.result; // Update data property
+         // };
+         // reader.readAsDataURL(selectedFile);
       },
    },
    mounted() {
