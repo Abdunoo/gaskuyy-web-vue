@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Dashboard from './views/Dashboard.vue';
 import DetailProduct from './views/DtlProduct.vue';
-import Category from './components/Category.vue';
 import Cart from './views/Cart.vue';
 import Admin from './views/Admin.vue';
 import Login from './views/Login.vue';
