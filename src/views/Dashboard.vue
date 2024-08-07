@@ -97,7 +97,7 @@
                   <span class="text-xs font-medium text-blue-400">See all</span>
                </div>
                <div class="grid w-full grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-6">
-                  <Card v-for="(product, index) in lstProducts.slice(0, 6)" :key="index" :product="product"></Card>
+                  <Card v-for="(product, index) in popularProducts" :key="index" :product="product"></Card>
                </div>
             </div>
 
@@ -310,6 +310,11 @@ export default defineComponent({
          })
          this.lstProducts = response.data
       },
+
+      popularProducts() {
+         return this.lstProducts.filter((item, index) => index < 6);
+      }
+
 
    },
    async mounted() {
